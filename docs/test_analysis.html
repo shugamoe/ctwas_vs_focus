@@ -513,15 +513,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustreeb725018de566947a7ca84c03605a9c8565319bc1targetblankb725018a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustreec42da046c59d91c6ba9254be7cd8f346c07e26c5targetblankc42da04a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/b725018de566947a7ca84c03605a9c8565319bc1" target="_blank">b725018</a>
+<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/c42da046c59d91c6ba9254be7cd8f346c07e26c5" target="_blank">c42da04</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustreeb725018de566947a7ca84c03605a9c8565319bc1targetblankb725018a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustreec42da046c59d91c6ba9254be7cd8f346c07e26c5targetblankc42da04a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -531,7 +531,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/b725018de566947a7ca84c03605a9c8565319bc1" target="_blank">b725018</a>.
+<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/c42da046c59d91c6ba9254be7cd8f346c07e26c5" target="_blank">c42da04</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -599,6 +599,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/ctwas_vs_focus/blob/c42da046c59d91c6ba9254be7cd8f346c07e26c5/analysis/test_analysis.Rmd" target="_blank">c42da04</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2023-08-28
+</td>
+<td>
+Test analysis with docs/assets static images v9
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/ctwas_vs_focus/94b57c598d924cb9bd183395099d158e497ec5de/docs/test_analysis.html" target="_blank">94b57c5</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2023-08-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -898,94 +932,9 @@ Test analysis
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <pre class="r"><code>for (chr in 1:22){
-  fname &lt;- as.character(glue(&quot;assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png&quot;))
-  knitr::include_graphics(fname, error=F)
-  knitr::include_graphics(glue(&quot;assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png&quot;), error=F)
+  cur_diag_graph &lt;- readRDS(glue(&quot;docs/assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.rds&quot;))
+  (cur_diag_graph)
 }</code></pre>
-<pre class="r"><code>knitr::include_graphics(&quot;assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr1.png&quot;, error=F)</code></pre>
-<p><img src="assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr1.png" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr1">
-Past versions of
-ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr1.png
-</button>
-</p>
-<div
-id="fig-ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr1"
-class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/shugamoe/ctwas_vs_focus/blob/38cbfb6ef4a3136228058ce8f65e659dce0cdb34/docs/assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr1.png" target="_blank">38cbfb6</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2023-08-28
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>knitr::include_graphics(&quot;assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr2.png&quot;, error=F)</code></pre>
-<p><img src="assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr2.png" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr2">
-Past versions of
-ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr2.png
-</button>
-</p>
-<div
-id="fig-ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr2"
-class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/shugamoe/ctwas_vs_focus/blob/38cbfb6ef4a3136228058ce8f65e659dce0cdb34/docs/assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr2.png" target="_blank">38cbfb6</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2023-08-28
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1008,9 +957,9 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] glue_1.6.2      forcats_1.0.0   stringr_1.5.0   dplyr_1.1.2    
- [5] purrr_0.3.4     readr_2.1.4     tidyr_1.2.0     tibble_3.2.1   
- [9] ggplot2_3.4.3   tidyverse_1.3.1 workflowr_1.7.1
+ [1] cowplot_1.1.1   glue_1.6.2      forcats_1.0.0   stringr_1.5.0  
+ [5] dplyr_1.1.2     purrr_0.3.4     readr_2.1.4     tidyr_1.2.0    
+ [9] tibble_3.2.1    ggplot2_3.4.3   tidyverse_1.3.1 workflowr_1.7.1
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.11       lubridate_1.9.2   getPass_0.2-2     ps_1.7.5         
