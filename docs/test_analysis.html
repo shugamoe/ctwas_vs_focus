@@ -513,15 +513,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustree9df521e8c31e3d2699ae9ff398bfaa2aa13a1d29targetblank9df521ea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustree218c9cef4e3683dd02a7cc1dfe95c4e1d0c2224dtargetblank218c9cea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/9df521e8c31e3d2699ae9ff398bfaa2aa13a1d29" target="_blank">9df521e</a>
+<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/218c9cef4e3683dd02a7cc1dfe95c4e1d0c2224d" target="_blank">218c9ce</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustree9df521e8c31e3d2699ae9ff398bfaa2aa13a1d29targetblank9df521ea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustree218c9cef4e3683dd02a7cc1dfe95c4e1d0c2224dtargetblank218c9cea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -531,7 +531,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/9df521e8c31e3d2699ae9ff398bfaa2aa13a1d29" target="_blank">9df521e</a>.
+<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/218c9cef4e3683dd02a7cc1dfe95c4e1d0c2224d" target="_blank">218c9ce</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -599,6 +599,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/ctwas_vs_focus/blob/218c9cef4e3683dd02a7cc1dfe95c4e1d0c2224d/analysis/test_analysis.Rmd" target="_blank">218c9ce</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2023-08-28
+</td>
+<td>
+Test analysis with docs/assets static images v4
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/ctwas_vs_focus/111a2d350bb8f00aabcf97d78d14c09b2152ccbb/docs/test_analysis.html" target="_blank">111a2d3</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2023-08-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -727,6 +761,12 @@ Test analysis
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
+<pre class="r"><code>for (chr in 1:22){
+  knitr::include_graphics(glue(&quot;assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png&quot;), error=F)
+}</code></pre>
+<pre class="r"><code>for (chr in c(1)){
+  knitr::include_graphics(glue(&quot;assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png&quot;), error=F)
+}</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
