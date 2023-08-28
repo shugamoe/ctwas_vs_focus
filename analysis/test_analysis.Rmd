@@ -13,6 +13,10 @@ editor_options:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r test, out.width='100%'}
-knitr::include_graphics("output/ctwas_diagnostic_plots/meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr9.png")
+```{r test, error=F, out.width='100%'}
+library(tidyverse)
+library(glue)
+for (chr in 1:22){
+  knitr::include_graphics(glue("assets/meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png"), error=F)
+}
 ```
