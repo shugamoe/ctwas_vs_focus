@@ -15,8 +15,14 @@ library(glue)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r test, error=F, out.width='100%'}
+```{r test, echo=T, out.width='100%'}
 for (chr in 1:22){
+  knitr::include_graphics(glue("assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png"), error=F)
+}
+```
+
+```{r test2, echo=T, out.width='100%'}
+for (chr in c(1)){
   knitr::include_graphics(glue("assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png"), error=F)
 }
 ```
