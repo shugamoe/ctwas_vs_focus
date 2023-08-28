@@ -10,12 +10,12 @@ editor_options:
 ## Introduction
 
 ```{r setup, include=F}
-knitr::opts_chunk$set(echo = FALSE, include=F)
+library(tidyverse)
+library(glue)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r test, error=F, out.width='100%'}
-library(tidyverse)
-library(glue)
 for (chr in 1:22){
   knitr::include_graphics(glue("assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png"), error=F)
 }
