@@ -18,8 +18,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r test, echo=T}
 for (chr in 1:22){
-  cur_diag_graph <- readRDS(glue("docs/assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.rds"))
-  (cur_diag_graph)
+  cur_diag_graph <- readRDS(glue("output/cache/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.rds"))
+  print(cur_diag_graph)
 }
 ```
 
