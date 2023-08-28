@@ -15,10 +15,11 @@ library(glue)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r test, echo=T, out.width='100%'}
+```{r test, echo=T}
 for (chr in 1:22){
   fname <- as.character(glue("assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png"))
   knitr::include_graphics(fname, error=F)
+  knitr::include_graphics(glue("assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.png"), error=F)
 }
 ```
 
