@@ -1,13 +1,12 @@
 # Modified from /project2/guiming/xsun/proteome_alzheimer/codes/locus_plot_fusion.R
 locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
-                       eqtl_or_sqtl, 
+                       eqtl_or_sqtl, gwide_tiss_sig_thresh,
                        xlim=NULL, return_table=F, focus=NULL,
                        label_panel="TWAS", label_genes=NULL, label_pos=NULL,
                        plot_eqtl=NULL, rerun_ctwas=F, rerun_load_only=F,
                        legend_side="right", legend_panel="cTWAS",
                        twas_ymax=NULL,draw_gene_track = draw_gene_track,
                        
-                       alpha=.05,
                        results_dir="data/ctwas_rss/",
                        zscore_dir="data/impute_expr_z/",
                        calced_ld_dir="/scratch/jmcclellan/scratch_pdb_filt_ctwas_gtex_v8_eur_ld/",
@@ -164,7 +163,9 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
   
     plot(a$pos[a$type=="SNP"], a$PVALUE[a$type == "SNP"], pch = 21, xlab=paste0("Chromosome ", region_tag1, " position (Mb)"), frame.plot=FALSE, bg = colorsall[1], ylab = "-log10(p value)", panel.first = grid(), ylim =c(0, twas_ymax), xaxt = 'n', xlim=c(start, end))
   
-    abline(h=-log10(alpha/nrow(ctwas_gene_res)), col ="red", lty = 2)
+    # abline(h=-log10(alpha/nrow(ctwas_gene_res)), col ="red", lty = 2)
+    # gwide_tiss_sig_thresh
+    abline(h=-log10(gwide_tiss_sig_thresh), col ="red", lty = 2)
     points(a$pos[a$type=="SNP" & a$r2max > r2cut], a$PVALUE[a$type == "SNP"  & a$r2max > r2cut], pch = 21, bg = "purple")
     points(a$pos[a$type=="SNP" & a$focus == 1], a$PVALUE[a$type == "SNP" & a$focus == 1], pch = 21, bg = "salmon")
     points(a$pos[a$type=="gene" & a$group=="Expression"], a$PVALUE[a$type == "gene" & a$group=="Expression"], pch = 22, bg = colorsall[1], cex = 2)

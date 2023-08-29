@@ -13,6 +13,7 @@ library(glue)
 library(cowplot)
 library(purrr)
 knitr::opts_chunk$set(echo = FALSE)
+options(dplyr.summarise.inform = FALSE)
 
 source("code/prep_data.R")
 source("code/locus_plot.R")
@@ -40,8 +41,8 @@ do_figures <- function(chrom, region_tag2){
   label_genes <- cur_tiss_chrom_region_mismatch_tracker %>%
     pull(`gene_id.v26`)
 
-  DT::datatable(cur_tiss_chrom_region_mismatch_tracker %>% 
-                select(all_of(c("gene_id.v26", "gene_name.v40", "tiss_gwide_twas_bfr_sig", "tiss_bfr_thresh"))))
+  print(DT::datatable(cur_tiss_chrom_region_mismatch_tracker %>% 
+                select(all_of(c("gene_id.v26", "gene_name.v40", "tiss_gwide_twas_bfr_sig", "tiss_bfr_thresh")))))
 
   a <- locus_plot(WANT_STUDIES[1],
                   want_tissues[wt_idx],
@@ -49,6 +50,7 @@ do_figures <- function(chrom, region_tag2){
                   chrom=chrom,
                   region_tag2=region_tag2,
                   eqtl_or_sqtl="eqtl",
+                  gwide_tiss_sig_thresh=gwide_tiss_sig_thresh,
                   return_table=F,
                   focus=NULL,
                   label_genes=label_genes,
@@ -77,6 +79,11 @@ Genome wide Bonferroni threshold for `r want_tissues[wt_idx]`: `r mismatch_gene_
 cur_tiss_mismatch_tracker <- mismatch_gene_tissue_tracker %>%
   filter(tissue == want_tissues[wt_idx])
 
+gwide_tiss_sig_thresh <- mismatch_gene_tissue_tracker %>%
+  filter(tissue == want_tissues[wt_idx]) %>%
+  pull(tiss_bfr_thresh) %>%
+  max(., na.rm=T)
+
 DT::datatable(cur_tiss_mismatch_tracker %>%
                 arrange(chrom, region_tag2) %>%
                 select(all_of(c("gene_id.v26", "gene_name.v40", "chrom", "tiss_gwide_twas_bfr_sig"))))
@@ -94,6 +101,7 @@ for (cur_chr in mismatch_gene_tissue_tracker %>% pull(chrom) %>% unique() %>% so
   cur_tiss_chrom_mismatch_tracker <- cur_tiss_mismatch_tracker %>%
     filter(chrom == !!cur_chr)
 
+
   cur_tiss_chrom_region_df %>%
     filter(chrom == !!cur_chr) %>%
     pwalk(do_figures)
@@ -103,6 +111,9 @@ wt_idx <- wt_idx + 1
 ```
 
 ### `r want_tissues[wt_idx]`
+
+Genome wide Bonferroni threshold for `r want_tissues[wt_idx]`: `r mismatch_gene_tissue_tracker %>% filter(tissue == want_tissues[wt_idx]) %>% pull(tiss_bfr_thresh) %>% max(., na.rm=T)`.
+
  #### `r want_tissues[wt_idx]` ### `r want_tissues[3]`
  #### `r want_tissues[wt_idx]` ### `r want_tissues[4]`
  #### `r want_tissues[wt_idx]` ### `r want_tissues[5]`
