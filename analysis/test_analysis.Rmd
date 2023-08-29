@@ -138,7 +138,7 @@ Genome wide Bonferroni threshold for `r want_tissues[wt_idx]`: `r mismatch_gene_
 
 ```{r tiss, results='asis', message=T,warning=F}
 # do_tissue(wt_idx)
-# dt_idx <- wt_idx + 1
+# wt_idx <- wt_idx + 1
 ```
 
  #### `r want_tissues[wt_idx]` ### `r want_tissues[3]`

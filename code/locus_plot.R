@@ -2,7 +2,7 @@
 locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
                        eqtl_or_sqtl, gwide_tiss_sig_thresh,
                        xlim=NULL, return_table=F, focus=NULL,
-                       label_panel="TWAS", label_genes=NULL, label_pos=NULL,
+                       label_panel="TWAS", label_genes=NULL, use_gname=T, label_pos=NULL,
                        plot_eqtl=NULL, rerun_ctwas=F, rerun_load_only=F,
                        legend_side="right", legend_panel="cTWAS",
                        twas_ymax=NULL,draw_gene_track = draw_gene_track,
@@ -18,9 +18,7 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     region_tag1 <- chrom
 
     
-    a <- ctwas_res[[tissue]] %>%
-      filter(chrom == !!chrom, 
-             region_tag2 == !!region_tag2)
+    a <- ctwas_res 
     ctwas_gene_res <- a %>%
       filter(type == "gene")
     
@@ -185,28 +183,23 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
         legend(x_pos, y= twas_ymax*0.95, c("Expression","Splicing","Methylation","SNP","Lead TWAS Gene", "R2 > 0.4", "R2 <= 0.4"), pch = c(22,23,24,21,19,19,19), col = c("black","black","black","black", "salmon", "purple", colorsall[1]), cex=0.7, title.adj = 0)
     }
     
-    ########### modified for ensemble id //fusion
-    #label_genes <- a[a$id==label_genes,]$genename
     og_label_genes <- label_genes
-    # label_genes <- a[a$id==label_genes,]$id
     label_genes <- a %>%
       filter(id %in% og_label_genes) %>%
       pull(id)
     
-    # if (label_panel=="TWAS" | label_panel=="both"){
-    #     for (i in 1:length(label_genes)){
-    #         text(a$pos[a$id==label_genes[i]], a$PVALUE[a$id==label_genes[i]], labels=a$genename[a$id==label_genes[i]], pos=label_pos[i], cex=0.7)
-    #     }
-    # }
     if (label_panel=="TWAS" | label_panel=="both"){
       # if (length(label_genes) == 0){
       #   browser()
       # }
       for (i in 1:length(label_genes)){
-        text(a$pos[a$id==label_genes[i]], a$PVALUE[a$id==label_genes[i]], labels=a$id[a$id==label_genes[i]], pos=label_pos[i], cex=0.7)
+        if (isTRUE(use_gname)){
+          text(a$pos[a$id==label_genes[i]], a$PVALUE[a$id==label_genes[i]], labels=a$genename[a$id==label_genes[i]], pos=label_pos[i], cex=0.7)
+        } else {
+          text(a$pos[a$id==label_genes[i]], a$PVALUE[a$id==label_genes[i]], labels=a$id[a$id==label_genes[i]], pos=label_pos[i], cex=0.7)
+        }
       }
     }
-    
 
     par(mar = c(0.25, 4.1, 0.25, 2.1))
     
@@ -272,7 +265,11 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     # }
     if (label_panel=="cTWAS" | label_panel=="both"){
       for (i in 1:length(label_genes)){
-        text(a$pos[a$id==label_genes[i]], a$susie_pip[a$id==label_genes[i]], labels=a$id[a$id==label_genes[i]], pos=label_pos[i], cex=0.7)
+        if (isTRUE(use_gname)){
+          text(a$pos[a$id==label_genes[i]], a$susie_pip[a$id==label_genes[i]], labels=a$genename[a$id==label_genes[i]], pos=label_pos[i], cex=0.7)
+        } else {
+          text(a$pos[a$id==label_genes[i]], a$susie_pip[a$id==label_genes[i]], labels=a$id[a$id==label_genes[i]], pos=label_pos[i], cex=0.7)
+        }
       }
     }
   
