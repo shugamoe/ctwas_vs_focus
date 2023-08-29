@@ -13,6 +13,7 @@ library(glue)
 library(cowplot)
 library(purrr)
 knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 options(dplyr.summarise.inform = FALSE)
 
 # https://github.com/rstudio/DT/issues/67
@@ -130,15 +131,15 @@ for (i in 10:11){
 }
 ```
 
-`r paste(knitr::knit(text=out), collapse='\n')`
+`r paste(knitr::knit(text=out), collapse='\n\n')`
 
 ### `r want_tissues[wt_idx]`
 
 Genome wide Bonferroni threshold for `r want_tissues[wt_idx]`: `r mismatch_gene_tissue_tracker %>% filter(tissue == want_tissues[wt_idx]) %>% pull(tiss_bfr_thresh) %>% max(., na.rm=T)`.
 
 ```{r tiss, results='asis', message=T,warning=F}
-# do_tissue(wt_idx)
-# wt_idx <- wt_idx + 1
+do_tissue(wt_idx)
+wt_idx <- wt_idx + 1
 ```
 
  #### `r want_tissues[wt_idx]` ### `r want_tissues[3]`
