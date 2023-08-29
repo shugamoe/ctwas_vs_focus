@@ -14,16 +14,38 @@ library(tidyverse)
 library(glue)
 library(cowplot)
 knitr::opts_chunk$set(echo = FALSE)
+WANT_STUDIES <- c("meta_analysis_BCAC_UKB_ovr_brca")
 ```
 
-```{r test, echo=T}
-for (chr in 1:22){
-  cur_diag_graph <- readRDS(glue("output/cache/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.rds"))
-  print(cur_diag_graph)
-}
+```{r test, include=F, echo=T}
+# for (chr in 1:22){
+#   cur_diag_graph <- readRDS(glue("output/cache/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr{chr}.rds"))
+#   print(cur_diag_graph)
+# }
 ```
 
 ```{r test2, include=F}
-knitr::include_graphics("assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr1.png", error=F)
-knitr::include_graphics("assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr2.png", error=F)
+# knitr::include_graphics("assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr1.png", error=F)
+# knitr::include_graphics("assets/ctwas_diag_meta_analysis_BCAC_UKB_ovr_brca__Breast_Mammary_Tissue__eqtl_chr2.png", error=F)
+```
+
+```{r test_locus_plot, message=F, warning=F}
+source("code/prep_data.R")
+source("code/locus_plot.R")
+prepped_data <- list()
+for (study in WANT_STUDIES){
+  prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))
+}
+a <- locus_plot(WANT_STUDIES[1], "Breast_Mammary_Tissue", prepped_data[["meta_analysis_BCAC_UKB_ovr_brca"]][["ctwas_res"]],
+                
+                      eqtl_or_sqtl="eqtl",
+                      return_table=T,
+                      focus=NULL,
+                      label_genes=NULL,
+                      rerun_ctwas=F,
+                      rerun_load_only=F,
+                      label_panel="both",
+                      legend_side="left",
+                      legend_panel="",
+                      draw_gene_track = F)
 ```
