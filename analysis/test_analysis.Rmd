@@ -1,5 +1,5 @@
 ---
-title: "test_analysis"
+title: "cTWAS vs FOCUS"
 author: "Julian McClellan"
 date: "2023-08-28"
 output: workflowr::wflow_html
@@ -7,15 +7,111 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Introduction
-
-```{r setup, include=F}
+```{r setup, message=F, include=F}
 library(tidyverse)
 library(glue)
 library(cowplot)
+library(purrr)
 knitr::opts_chunk$set(echo = FALSE)
+
+source("code/prep_data.R")
+source("code/locus_plot.R")
 WANT_STUDIES <- c("meta_analysis_BCAC_UKB_ovr_brca")
+prepped_data <- list()
+for (study in WANT_STUDIES){
+  prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))
+  attach(prepped_data[[study]])
+}
+  
+# rlist <- list(top_mismatch_genes = top_mismatch_genes,
+#               mismatch_gene_tissue_tracker = mismatch_gene_tissue_tracker,
+#               want_tissues=want_tissues,
+#               ctwas_res=ctwas_res,
+#               focus_low_cutoff=focus_low_cutoff,
+#               ctwas_high_cutoff=ctwas_high_cutoff
+#               )
+wt_idx <- 1
+
+do_figures <- function(chrom, region_tag2){
+  # First the locus plot
+  cur_tiss_chrom_region_mismatch_tracker <- cur_tiss_chrom_mismatch_tracker %>%
+    filter(region_tag2 == !!region_tag2)
+
+  label_genes <- cur_tiss_chrom_region_mismatch_tracker %>%
+    pull(`gene_id.v26`)
+
+  DT::datatable(cur_tiss_chrom_region_mismatch_tracker %>% 
+                select(all_of(c("gene_id.v26", "gene_name.v40", "tiss_gwide_twas_bfr_sig", "tiss_bfr_thresh"))))
+
+  a <- locus_plot(WANT_STUDIES[1],
+                  want_tissues[wt_idx],
+                  prepped_data[["meta_analysis_BCAC_UKB_ovr_brca"]][["ctwas_res"]],
+                  chrom=chrom,
+                  region_tag2=region_tag2,
+                  eqtl_or_sqtl="eqtl",
+                  return_table=F,
+                  focus=NULL,
+                  label_genes=label_genes,
+                  rerun_ctwas=F,
+                  rerun_load_only=F,
+                  label_panel="both",
+                  legend_side="left",
+                  legend_panel="",
+                  draw_gene_track = F)
+}
 ```
+
+## Introduction
+
+```{r introduction, message=F, warning=F}
+DT::datatable(top_mismatch_genes)
+```
+
+## By Tissue Figures and Tables
+
+### `r want_tissues[wt_idx]`
+
+Genome wide Bonferroni threshold for `r want_tissues[wt_idx]`: `r mismatch_gene_tissue_tracker %>% filter(tissue == want_tissues[wt_idx]) %>% pull(tiss_bfr_thresh) %>% max(., na.rm=T)`.
+```{r tiss1, message=T,warning=F}
+# First a table showing all mismatching genes
+cur_tiss_mismatch_tracker <- mismatch_gene_tissue_tracker %>%
+  filter(tissue == want_tissues[wt_idx])
+
+DT::datatable(cur_tiss_mismatch_tracker %>%
+                arrange(chrom, region_tag2) %>%
+                select(all_of(c("gene_id.v26", "gene_name.v40", "chrom", "tiss_gwide_twas_bfr_sig"))))
+
+cur_tiss_chrom_region_df <- cur_tiss_mismatch_tracker %>%
+  group_by(chrom, region_tag2) %>%
+  summarize() %>%
+  head() # debug
+
+for (cur_chr in mismatch_gene_tissue_tracker %>% pull(chrom) %>% unique() %>% sort()){
+  cur_diag_graph <- readRDS(glue("output/cache/ctwas_diag_{WANT_STUDIES[1]}__{want_tissues[wt_idx]}__eqtl_chr{cur_chr}.rds"))
+  print(glue("Chromosome {cur_chr}"))
+  print(cur_diag_graph)
+
+  cur_tiss_chrom_mismatch_tracker <- cur_tiss_mismatch_tracker %>%
+    filter(chrom == !!cur_chr)
+
+  cur_tiss_chrom_region_df %>%
+    filter(chrom == !!cur_chr) %>%
+    pwalk(do_figures)
+}
+
+wt_idx <- wt_idx + 1
+```
+
+### `r want_tissues[wt_idx]`
+ #### `r want_tissues[wt_idx]` ### `r want_tissues[3]`
+ #### `r want_tissues[wt_idx]` ### `r want_tissues[4]`
+ #### `r want_tissues[wt_idx]` ### `r want_tissues[5]`
+ #### `r want_tissues[wt_idx]` ### `r want_tissues[6]`
+ #### `r want_tissues[wt_idx]` ### `r want_tissues[7]`
+ #### `r want_tissues[wt_idx]` ### `r want_tissues[8]`
+ #### `r want_tissues[wt_idx]` ### `r want_tissues[9]`
+ #### `r want_tissues[wt_idx]` ### `r want_tissues[10]`
+ #### `r want_tissues[wt_idx]` ### `r want_tissues[11]`
 
 ```{r test, include=F, echo=T}
 # for (chr in 1:22){
@@ -30,22 +126,21 @@ WANT_STUDIES <- c("meta_analysis_BCAC_UKB_ovr_brca")
 ```
 
 ```{r test_locus_plot, message=F, warning=F}
-source("code/prep_data.R")
-source("code/locus_plot.R")
-prepped_data <- list()
-for (study in WANT_STUDIES){
-  prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))
-}
-a <- locus_plot(WANT_STUDIES[1], "Breast_Mammary_Tissue", prepped_data[["meta_analysis_BCAC_UKB_ovr_brca"]][["ctwas_res"]],
-                
-                      eqtl_or_sqtl="eqtl",
-                      return_table=T,
-                      focus=NULL,
-                      label_genes=NULL,
-                      rerun_ctwas=F,
-                      rerun_load_only=F,
-                      label_panel="both",
-                      legend_side="left",
-                      legend_panel="",
-                      draw_gene_track = F)
+# prepped_data <- list()
+# for (study in WANT_STUDIES){
+#   prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))
+# }
+# a <- locus_plot(WANT_STUDIES[1], "Breast_Mammary_Tissue", prepped_data[["meta_analysis_BCAC_UKB_ovr_brca"]][["ctwas_res"]],
+#                 
+#                       eqtl_or_sqtl="eqtl",
+#                       return_table=T,
+#                       focus=NULL,
+#                       label_genes=NULL,
+#                       rerun_ctwas=F,
+#                       rerun_load_only=F,
+#                       label_panel="both",
+#                       legend_side="left",
+#                       legend_panel="",
+#                       draw_gene_track = F)
 ```
+
