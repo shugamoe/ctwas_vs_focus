@@ -44,9 +44,16 @@ do_tissue <- function(wt_idx){
     # First the locus plot
     cur_tiss_chrom_region_mismatch_tracker <- cur_tiss_chrom_mismatch_tracker %>%
       filter(region_tag2 == !!region_tag2)
-  
+
+    ctwas_res_filt <- ctwas_res[[want_tissues[wt_idx]]] %>%
+      filter(chrom == !!chrom, region_tag2 == !!region_tag2)
+    region_tag_pos_min <- ctwas_res_filt %>% pull(pos) %>% min(., na.rm=T)
+    region_tag_pos_max <- ctwas_res_filt %>% pull(pos) %>% max(., na.rm=T)
+    
     pre_fig_table <- DT::datatable(cur_tiss_chrom_region_mismatch_tracker %>% 
-                  select(all_of(c("gene_id.v26", "gene_name.v40", "tiss_gwide_twas_bfr_sig", "tiss_bfr_thresh"))))
+                  select(all_of(c("gene_id.v26", "gene_name.v40", "tiss_gwide_twas_bfr_sig", "tiss_bfr_thresh"))),
+              caption=glue("Chr{chrom} | ~ {region_tag_pos_min}-{region_tag_pos_max}"))
+
     cat("\n\n")
     cat(knitr::knit_print(pre_fig_table))
     cat("\n\n")
@@ -56,7 +63,7 @@ do_tissue <- function(wt_idx){
   
     a <- locus_plot(WANT_STUDIES[1],
                     want_tissues[wt_idx],
-                    prepped_data[["meta_analysis_BCAC_UKB_ovr_brca"]][["ctwas_res"]],
+                    ctwas_res_filt,
                     chrom=chrom,
                     region_tag2=region_tag2,
                     eqtl_or_sqtl="eqtl",
@@ -82,7 +89,9 @@ do_tissue <- function(wt_idx){
   cat("\n\n")
   cat(knitr::knit_print(DT::datatable(cur_tiss_mismatch_tracker %>%
                   arrange(chrom, region_tag2) %>%
-                  select(all_of(c("gene_id.v26", "gene_name.v40", "chrom", "tiss_gwide_twas_bfr_sig"))))))
+                  select(all_of(c("gene_id.v26", "gene_name.v40", "chrom", "tiss_gwide_twas_bfr_sig"))),
+                            caption=glue("{want_tissues[wt_idx]}: FOCUS PIP < {focus_low_cutoff} & cTWAS PIP > {ctwas_high_cutoff}")
+              )))
   cat("\n\n")
 
   cur_tiss_chrom_region_df <- cur_tiss_mismatch_tracker %>%
@@ -122,6 +131,7 @@ Genome wide Bonferroni threshold for `r want_tissues[wt_idx]`: `r mismatch_gene_
 
 ```{r tiss1, results='asis', message=T,warning=F}
 do_tissue(wt_idx)
+dt_idx <- wt_idx + 1
 ```
 
  #### `r want_tissues[wt_idx]` ### `r want_tissues[3]`
