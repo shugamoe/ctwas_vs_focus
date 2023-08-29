@@ -120,7 +120,7 @@ DT::datatable(top_mismatch_genes)
 
 Genome wide Bonferroni threshold for `r want_tissues[wt_idx]`: `r mismatch_gene_tissue_tracker %>% filter(tissue == want_tissues[wt_idx]) %>% pull(tiss_bfr_thresh) %>% max(., na.rm=T)`.
 
-```{r tiss1, message=T,warning=F}
+```{r tiss1, results='asis', message=T,warning=F}
 do_tissue(wt_idx)
 ```
 
