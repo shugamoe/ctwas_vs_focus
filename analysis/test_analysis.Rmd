@@ -80,6 +80,7 @@ do_tissue <- function(wt_idx){
                     legend_side="left",
                     legend_panel="",
                     draw_gene_track = F)
+    cat("\n\n")
   }
   cur_tiss_mismatch_tracker <- mismatch_gene_tissue_tracker %>%
     filter(tissue == want_tissues[wt_idx])
