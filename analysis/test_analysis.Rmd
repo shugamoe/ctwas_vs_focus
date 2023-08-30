@@ -102,7 +102,7 @@ do_tissue <- function(wt_idx){
   cur_tiss_chrom_region_df <- cur_tiss_mismatch_tracker %>%
     group_by(chrom, region_tag2) %>%
     summarize() %>%
-    head(2)
+    head(2) # debug
 
   for (cur_chr in cur_tiss_chrom_region_df %>% pull(chrom) %>% unique() %>% sort()){
     cur_diag_graph <- readRDS(glue("output/cache/ctwas_diag_{WANT_STUDIES[1]}__{want_tissues[wt_idx]}__eqtl_chr{cur_chr}.rds"))
@@ -133,7 +133,7 @@ knitr::include_graphics("assets/ctwas_model_and_priors.png", error=F)
 # https://stackoverflow.com/questions/21729415/generate-dynamic-r-markdown-blocks
 out = NULL
 # for (i in 1:length(want_tissues)){
-for (i in 1:2){
+for (i in 1:2){ # debug
   out <- c(out, knitr::knit_expand("analysis/chunks/tissue_chunk.Rmd"))
 }
 ```
