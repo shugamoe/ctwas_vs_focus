@@ -53,7 +53,7 @@ do_tissue <- function(wt_idx){
     region_tag_pos_max <- ctwas_res_filt %>% pull(pos) %>% max(., na.rm=T)
     
     pre_fig_table <- DT::datatable(cur_tiss_chrom_region_mismatch_tracker %>% 
-                  select(all_of(c("gene_id.v26", "gene_name.v40", "tiss_gwide_twas_bfr_sig", "tiss_bfr_thresh"))),
+                  select(all_of(c("gene_id.v26", "gene_name.v40", "twas_sig", "tiss_bfr_thresh"))),
               caption=glue("Chr{chrom} | ~ {region_tag_pos_min}-{region_tag_pos_max}"))
 
     cat("\n\n")
@@ -91,7 +91,7 @@ do_tissue <- function(wt_idx){
   cat("\n\n")
   cat(knitr::knit_print(DT::datatable(cur_tiss_mismatch_tracker %>%
                   arrange(chrom, region_tag2) %>%
-                  select(all_of(c("gene_id.v26", "gene_name.v40", "chrom", "tiss_gwide_twas_bfr_sig"))),
+                  select(all_of(c("gene_id.v26", "gene_name.v40", "chrom", "twas_sig"))),
                             caption=glue("{want_tissues[wt_idx]}: FOCUS PIP < {focus_low_cutoff} & cTWAS PIP > {ctwas_high_cutoff}")
               )))
   cat("\n\n")
@@ -119,7 +119,8 @@ do_tissue <- function(wt_idx){
 ## Introduction
 
 ```{r introduction, message=F, warning=F}
-DT::datatable(top_mismatch_genes)
+DT::datatable(top_mismatch_genes, caption=glue("All genes with FOCUS PIP < {focus_low_cutoff} & cTWAS PIP > {ctwas_high_cutoff} for {WANT_STUDIES[1]}"))
+knitr::include_graphics("assets/ctwas_model_and_priors.png", error=F)
 ```
 
 ## By Tissue Figures and Tables
@@ -130,9 +131,9 @@ out = NULL
 for (i in 10:11){
   out <- c(out, knitr::knit_expand("analysis/chunks/tissue_chunk.Rmd"))
 }
+# `RRRr paste(knitr::knit(text=out), collapse='\n\n')`
 ```
 
-`RRRr paste(knitr::knit(text=out), collapse='\n\n')`
 `r knitr::knit(text=out)`
 
 ### `r want_tissues[wt_idx]`
