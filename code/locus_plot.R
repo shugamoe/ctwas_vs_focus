@@ -22,11 +22,6 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     ctwas_gene_res <- a %>%
       filter(type == "gene")
     
-    ##added for fusion weights
-    # a$genename[a$type == "gene"] <- unlist(strsplit(a$id[a$type == "gene"],split = "[.]"))[seq(2,2*nrow(a[a$type == "gene",]), by = 2)]
-    # a$id_ensembl[a$type == "gene"] <- unlist(strsplit(a$id[a$type == "gene"],split = "[.]"))[seq(1,2*nrow(a[a$type == "gene",]), by = 2)]
-    
-    
     regionlist <- readRDS(file.path(results_dir, glue("{study_prefix}__{tissue}__{eqtl_or_sqtl}_chr{chrom}.regionlist.RDS")))
 
     if (isTRUE(by_chrom_fix)){
@@ -102,7 +97,12 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
         if (is.null(label_genes)){
           focus <- a$id[which.max(abs(a$z)[a$type=="gene"])]
         } else {
-          focus <- label_genes
+          # Downstream code only plays nice if we have a single focus gene
+          focus <- a %>%
+            filter(id %in% label_genes) %>%
+            arrange(desc(z)) %>%
+            head(1) %>%
+            pull(id)
         }
     }
   
@@ -112,17 +112,31 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
   
     
     if (is.null(label_pos)){
-        label_pos <- rep(3, length(label_genes))
+        label_pos <- rep(c(1,3), length(label_genes))[1:length(label_genes)]
     }
   
     if (is.null(plot_eqtl)){
-        plot_eqtl <- focus
-        plot_eqtl_gname <- a$genename[a$id==focus]
+        plot_eqtl <- label_genes
+        plot_eqtl_gname <- a %>%
+          filter(id %in% label_genes) %>%
+          pull(genename)
     }
   
-    focus <- a$id[which(a$id==focus)]
-    a$focus <- 0
-    a$focus <- as.numeric(a$id==focus)
+    # Big regions cause which to mess up here I think, so dplyr verbs instead
+    og_focus <- focus
+    focus <- a %>%
+      filter(id %in% focus) %>%
+      pull(id)
+    # a$focus <- 0
+    # a$focus <- as.numeric(a$id==focus)
+    a <- a %>%
+      mutate(focus = ifelse(id %in% focus, 1, 0))
+    if (length(focus) == 0){
+      browser()
+    }
+    if (length(plot_eqtl) == 0){
+      browser()
+    }
     
     a$PVALUE <- (-log(2) - pnorm(abs(a$z), lower.tail=F, log.p=T))/log(10)
   
@@ -140,8 +154,19 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     colnames(R_snp) <- R_snp_info$id
   
     a$r2max <- NA
-    a$r2max[a$type=="gene"] <- R_gene[focus,a$id[a$type=="gene"]]
-    a$r2max[a$type=="SNP"] <- R_snp_gene[a$id[a$type=="SNP"],focus]
+    # a$r2max[a$type=="gene"] <- R_gene[focus,a$id[a$type=="gene"]]
+    # a$r2max[a$type=="SNP"] <- R_snp_gene[a$id[a$type=="SNP"],focus]
+    replace_gene <- R_gene[focus,a$id[a$type=="gene"]]
+    replace_snp <- R_snp_gene[a$id[a$type=="SNP"],focus]
+
+    if (length(replace_gene) != length(a$r2max[a$type=="gene"])){
+      browser()
+    }
+    if (length(replace_snp) != length(a$r2max[a$type=="SNP"])){
+      browser()
+    }
+    a$r2max[a$type=="gene"] <- replace_gene
+    a$r2max[a$type=="SNP"] <- replace_snp
   
     r2cut <- 0.4
     colorsall <- c("#7fc97f", "#beaed4", "#fdc086")
@@ -211,7 +236,10 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     plot(NA, xlim = c(start, end), ylim = c(0, length(plot_eqtl)), frame.plot = F, axes = F, xlab = NA, ylab = NA)
     
     for (i in 1:length(plot_eqtl)){
-      cgene <- a$id[which(a$id==plot_eqtl[i])]
+      cgene <- a %>%
+        filter(id == plot_eqtl[i]) %>%
+        pull(id)
+      # cgene <- a$id[which(a$id==plot_eqtl[i])]
       
       if (isTRUE(by_chrom_fix)){
         load(file.path(zscore_dir, glue("{study_prefix}__{tissue}__{eqtl_or_sqtl}_chr{chrom}_chr{chrom}.exprqc.Rd"))) 
@@ -235,10 +263,10 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     
     if (isTRUE(use_gname)){
       text(start, length(plot_eqtl)-(1:length(plot_eqtl))+0.5,  
-           labels = plot_eqtl, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
+           labels = plot_eqtl_gname, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
     } else {
       text(start, length(plot_eqtl)-(1:length(plot_eqtl))+0.5,  
-           labels = plot_eqtl_gname, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
+           labels = plot_eqtl, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
     }
     
   

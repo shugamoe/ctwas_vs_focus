@@ -346,7 +346,7 @@ library(glue)
 library(tidyverse)
 WANT_STUDIES <- c("meta_analysis_BCAC_UKB_ovr_brca")
 if (interactive()){
-  make_diagnostic_graphs("meta_bcac_ukb_ovr")
+  # make_diagnostic_graphs("meta_bcac_ukb_ovr")
   # prepped_data <- list()
   # for (study in WANT_STUDIES){
   #   prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))
