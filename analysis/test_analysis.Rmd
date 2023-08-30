@@ -140,7 +140,7 @@ for (i in 1:2){ # debug
 # `r knitr::knit(text=out)`
 ```
 
-`r knitr::knit(text=paste(out, collapse="\n"))`
+`r knitr::knit(text=paste(out, collapse="\n\n"))`
 
 ```{r tiss, results='asis', message=F,warning=F}
 # do_tissue(wt_idx)
