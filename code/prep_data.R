@@ -97,7 +97,7 @@ main <- function(study_name,
              get(glue("{cur_tiss}_highest_pip")) < focus_low_cutoff
              ) %>%
       select(all_of(c("ens_gene_id_no_decimal", "chrom", cur_tiss_names))) %>% as_tibble() %>%
-      mutate(`tiss_gwide_twas_bfr_sig` = get(cur_tiss_names[1]) < ct_bfr_thresh,
+      mutate(`twas_sig` = get(cur_tiss_names[1]) < ct_bfr_thresh,
              tissue=cur_tiss,
              tiss_bfr_thresh=ct_bfr_thresh
              ) %>%
@@ -105,17 +105,17 @@ main <- function(study_name,
       left_join(ctwas_res[[cur_tiss]] %>% select(all_of(c("id", "region_tag2"))), by = c("gene_id.v26" = "id"))
 
     gene_df_master <- gene_df_master %>%
-      mutate(!!glue("{cur_tiss}_tiss_gwide_twas_bfr_sig") := get(cur_tiss_names[1]) < ct_bfr_thresh,
+      mutate(!!glue("{cur_tiss}_twas_sig") := get(cur_tiss_names[1]) < ct_bfr_thresh,
              !!glue("{cur_tiss}_pip_mismatch") := ens_gene_id_no_decimal %in% ct_mismatch_df$ens_gene_id_no_decimal)
     
-    num_bfr_sig <- sum(ct_mismatch_df %>% pull(get("tiss_gwide_twas_bfr_sig")))
+    num_bfr_sig <- sum(ct_mismatch_df %>% pull(get("twas_sig")))
 
     mismatch_gene_tissue_tracker <- bind_rows(mismatch_gene_tissue_tracker,
                                               ct_mismatch_df %>%
                                                 select(all_of(c("gene_id.v26",
                                                                 "gene_name.v40",
                                                                 "chrom",
-                                                                "tiss_gwide_twas_bfr_sig",
+                                                                "twas_sig",
                                                                 "tiss_bfr_thresh",
                                                                 "region_tag2",
                                                                 "tissue")))
@@ -175,8 +175,16 @@ get_ctwas_res <- function(study_name, want_tissues, eqtl_or_sqtl, gene_key_df,
 
       cur_tiss_df <- bind_rows(cur_tiss_df, cur_ctwas_res)
     }
+      if (eqtl_or_sqtl == "eqtl"){
+        cur_tiss_df <- cur_tiss_df %>%
+          mutate(group = ifelse(type == "gene", "Expression", NA))
+      } else if (eqtl_or_sqtl == "sqtl"){
+        cur_tiss_df <- cur_tiss_df %>%
+          mutate(group = ifelse(type == "gene", "Splicing", NA))
+      }
     ctwas_res[[cur_tiss]] <- cur_tiss_df
   }
+
 
   # > names(tt)
   # [1] "chrom"       "id"          "pos"         "type"        "region_tag1"
@@ -288,7 +296,7 @@ make_diagnostic_graphs <- function(study_prefix,
     p_pve <- ggplot(df, aes(x=niter, y=value, group=group)) +
       geom_line(aes(color=group)) +
       geom_point(aes(color=group)) +
-      xlab("Iteration") + ylab(bquote(h^2[G])) +
+      xlab("Iteration") + ylab(bquote(h[G]^2)) +
       ggtitle("PVE") +
       theme_cowplot()
     
@@ -338,7 +346,7 @@ library(glue)
 library(tidyverse)
 WANT_STUDIES <- c("meta_analysis_BCAC_UKB_ovr_brca")
 if (interactive()){
-  # make_diagnostic_graphs("meta_bcac_ukb_ovr")
+  make_diagnostic_graphs("meta_bcac_ukb_ovr")
   # prepped_data <- list()
   # for (study in WANT_STUDIES){
   #   prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))

@@ -1,0 +1,7 @@
+### `r want_tissues[{{i}}]`
+
+Genome wide Bonferroni threshold for `r want_tissues[{{i}}]`: `r mismatch_gene_tissue_tracker %>% filter(tissue == want_tissues[{{i}}]) %>% pull(tiss_bfr_thresh) %>% max(., na.rm=T)`.
+
+```{r {{want_tissues[i]}}, results='asis', message=T, warning=F}
+do_tissue({{i}})
+```

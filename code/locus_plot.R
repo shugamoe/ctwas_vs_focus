@@ -18,13 +18,13 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     region_tag1 <- chrom
 
     
-    a <- ctwas_res 
+    a <- ctwas_res
     ctwas_gene_res <- a %>%
       filter(type == "gene")
     
     ##added for fusion weights
-    a$genename[a$type == "gene"] <- unlist(strsplit(a$id[a$type == "gene"],split = "[.]"))[seq(2,2*nrow(a[a$type == "gene",]), by = 2)]
-    a$id_ensembl[a$type == "gene"] <- unlist(strsplit(a$id[a$type == "gene"],split = "[.]"))[seq(1,2*nrow(a[a$type == "gene",]), by = 2)]
+    # a$genename[a$type == "gene"] <- unlist(strsplit(a$id[a$type == "gene"],split = "[.]"))[seq(2,2*nrow(a[a$type == "gene",]), by = 2)]
+    # a$id_ensembl[a$type == "gene"] <- unlist(strsplit(a$id[a$type == "gene"],split = "[.]"))[seq(1,2*nrow(a[a$type == "gene",]), by = 2)]
     
     
     regionlist <- readRDS(file.path(results_dir, glue("{study_prefix}__{tissue}__{eqtl_or_sqtl}_chr{chrom}.regionlist.RDS")))
@@ -99,7 +99,11 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     }
   
     if (is.null(focus)){
-        focus <- a$id[which.max(abs(a$z)[a$type=="gene"])]
+        if (is.null(label_genes)){
+          focus <- a$id[which.max(abs(a$z)[a$type=="gene"])]
+        } else {
+          focus <- label_genes
+        }
     }
   
     if (is.null(label_genes)){
