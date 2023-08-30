@@ -117,6 +117,7 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
   
     if (is.null(plot_eqtl)){
         plot_eqtl <- focus
+        plot_eqtl_gname <- a$genename[a$id==focus]
     }
   
     focus <- a$id[which(a$id==focus)]
@@ -232,8 +233,13 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
       }
     }
     
-    text(start, length(plot_eqtl)-(1:length(plot_eqtl))+0.5,  
-         labels = plot_eqtl, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
+    if (isTRUE(use_gname)){
+      text(start, length(plot_eqtl)-(1:length(plot_eqtl))+0.5,  
+           labels = plot_eqtl, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
+    } else {
+      text(start, length(plot_eqtl)-(1:length(plot_eqtl))+0.5,  
+           labels = plot_eqtl_gname, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
+    }
     
   
     par(mar = c(4.1, 4.1, 0, 2.1))
