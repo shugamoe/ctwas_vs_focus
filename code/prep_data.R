@@ -339,6 +339,12 @@ make_diagnostic_graphs <- function(study_prefix,
   }
 }
 
+make_ctwas_vs_twas_graph <- function(study,
+                                     tiss_list="data/tissue_lists/11tiss.txt"
+                                     ){
+  want_tissues <- fread(tiss_list, header=F)[["V1"]]
+}
+
 
 
 
@@ -347,14 +353,11 @@ library(tidyverse)
 WANT_STUDIES <- c("meta_analysis_BCAC_UKB_ovr_brca")
 if (interactive()){
   # make_diagnostic_graphs("meta_bcac_ukb_ovr")
-  # prepped_data <- list()
-  # for (study in WANT_STUDIES){
-  #   prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))
-  # }
+  prepped_data <- list()
+  for (study in WANT_STUDIES){
+    # make_ctwas_vs_twas_graph(study)
+    prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))
+  }
 } else {
-  # make_diagnostic_graphs("meta_bcac_ukb_ovr")
-  # prepped_data <- list()
-  # for (study in WANT_STUDIES){
-  #   prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))
-  # }
+  # hi
 }
