@@ -28,7 +28,7 @@ WANT_STUDIES <- c("meta_analysis_BCAC_UKB_ovr_brca")
 prepped_data <- list()
 for (study in WANT_STUDIES){
   prepped_data[[study]] <- runonce::save_run({main(study)}, glue("output/cache/{study}.rds"))
-  attach(prepped_data[[study]])
+  attach(prepped_data[[study]]) # variables attached shown in below comment
 }
   
 #   rlist <- list(top_mismatch_genes = top_mismatch_genes,
@@ -62,6 +62,9 @@ do_tissue <- function(wt_idx){
   
     label_genes <- cur_tiss_chrom_region_mismatch_tracker %>%
       pull(`gene_id.v26`)
+    if (length(label_genes) == 0){
+      label_genes <- NULL
+    }
   
     a <- locus_plot(WANT_STUDIES[1],
                     want_tissues[wt_idx],
@@ -99,11 +102,12 @@ do_tissue <- function(wt_idx){
   cur_tiss_chrom_region_df <- cur_tiss_mismatch_tracker %>%
     group_by(chrom, region_tag2) %>%
     summarize() %>%
-    head(2) # debug
+    head(2)
 
   for (cur_chr in cur_tiss_chrom_region_df %>% pull(chrom) %>% unique() %>% sort()){
     cur_diag_graph <- readRDS(glue("output/cache/ctwas_diag_{WANT_STUDIES[1]}__{want_tissues[wt_idx]}__eqtl_chr{cur_chr}.rds"))
-    print(glue("Chromosome {cur_chr}. {want_tissues[wt_idx]}"))
+    # print(glue("Chromosome {cur_chr}. {want_tissues[wt_idx]}"))
+    cat(glue("### Chromosome {cur_chr}. {want_tissues[wt_idx]}"))
     print(cur_diag_graph)
   
     cur_tiss_chrom_mismatch_tracker <- cur_tiss_mismatch_tracker %>%
@@ -116,44 +120,28 @@ do_tissue <- function(wt_idx){
 }
 ```
 
-## Introduction
+# Introduction
 
 ```{r introduction, message=F, warning=F}
 DT::datatable(top_mismatch_genes, caption=glue("All genes with FOCUS PIP < {focus_low_cutoff} & cTWAS PIP > {ctwas_high_cutoff} for {WANT_STUDIES[1]}"))
 knitr::include_graphics("assets/ctwas_model_and_priors.png", error=F)
 ```
 
-## By Tissue Figures and Tables
+# By Tissue Figures and Tables
 
 ```{r iterate_tissues, message=F,warning=F, include=F}
 # https://stackoverflow.com/questions/21729415/generate-dynamic-r-markdown-blocks
 out = NULL
-for (i in 10:11){
+# for (i in 1:length(want_tissues)){
+for (i in 1:2){
   out <- c(out, knitr::knit_expand("analysis/chunks/tissue_chunk.Rmd"))
 }
-# `RRRr paste(knitr::knit(text=out), collapse='\n\n')`
 ```
-
-`r knitr::knit(text=out)`
-
-### `r want_tissues[wt_idx]`
-
-Genome wide Bonferroni threshold for `r want_tissues[wt_idx]`: `r mismatch_gene_tissue_tracker %>% filter(tissue == want_tissues[wt_idx]) %>% pull(tiss_bfr_thresh) %>% max(., na.rm=T)`.
 
 ```{r tiss, results='asis', message=T,warning=F}
-do_tissue(wt_idx)
-wt_idx <- wt_idx + 1
+# do_tissue(wt_idx)
+# wt_idx <- wt_idx + 1
 ```
-
- #### `r want_tissues[wt_idx]` ### `r want_tissues[3]`
- #### `r want_tissues[wt_idx]` ### `r want_tissues[4]`
- #### `r want_tissues[wt_idx]` ### `r want_tissues[5]`
- #### `r want_tissues[wt_idx]` ### `r want_tissues[6]`
- #### `r want_tissues[wt_idx]` ### `r want_tissues[7]`
- #### `r want_tissues[wt_idx]` ### `r want_tissues[8]`
- #### `r want_tissues[wt_idx]` ### `r want_tissues[9]`
- #### `r want_tissues[wt_idx]` ### `r want_tissues[10]`
- #### `r want_tissues[wt_idx]` ### `r want_tissues[11]`
 
 ```{r test, include=F, echo=T}
 # for (chr in 1:22){
@@ -185,4 +173,3 @@ wt_idx <- wt_idx + 1
 #                       legend_panel="",
 #                       draw_gene_track = F)
 ```
-
