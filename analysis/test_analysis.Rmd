@@ -13,7 +13,8 @@ library(glue)
 library(cowplot)
 library(purrr)
 knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+# https://stackoverflow.com/questions/30237310/setting-work-directory-in-knitr-using-opts-chunksetroot-dir-doesnt-wor
+# knitr::opts_knit$set(root.dir = file.path(rprojroot::find_rstudio_root_file()))
 options(dplyr.summarise.inform = FALSE)
 
 # https://github.com/rstudio/DT/issues/67
