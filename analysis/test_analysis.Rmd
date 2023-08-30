@@ -104,8 +104,8 @@ do_tissue <- function(wt_idx){
 
   for (cur_chr in cur_tiss_chrom_region_df %>% pull(chrom) %>% unique() %>% sort()){
     cur_diag_graph <- readRDS(glue("output/cache/ctwas_diag_{WANT_STUDIES[1]}__{want_tissues[wt_idx]}__eqtl_chr{cur_chr}.rds"))
-    # print(glue("Chromosome {cur_chr}. {want_tissues[wt_idx]}"))
-    cat(glue("### Chromosome {cur_chr}. {want_tissues[wt_idx]}"))
+    print(glue("Chromosome {cur_chr}. {want_tissues[wt_idx]}"))
+    # cat(glue("### Chromosome {cur_chr}. {want_tissues[wt_idx]}"))
     print(cur_diag_graph)
   
     cur_tiss_chrom_mismatch_tracker <- cur_tiss_mismatch_tracker %>%
@@ -138,7 +138,8 @@ for (i in 1:2){ # debug
 
 `r knitr::knit(text=out)`
 
-```{r tiss, results='asis', message=T,warning=F}
+```{r tiss, results='asis', message=F,warning=F}
+1 + 1
 # do_tissue(wt_idx)
 # wt_idx <- wt_idx + 1
 ```
