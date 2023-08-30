@@ -1,7 +1,7 @@
 ---
 title: "cTWAS vs FOCUS"
 author: "Julian McClellan"
-date: "2023-08-28"
+date: "2023-08-31"
 output: workflowr::wflow_html
 editor_options:
   chunk_output_type: console
