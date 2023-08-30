@@ -80,7 +80,7 @@ do_tissue <- function(wt_idx){
                     legend_side="left",
                     legend_panel="",
                     draw_gene_track = F)
-    cat("\n\n")
+    # cat("\n\n")
   }
   cur_tiss_mismatch_tracker <- mismatch_gene_tissue_tracker %>%
     filter(tissue == want_tissues[wt_idx])
@@ -105,10 +105,10 @@ do_tissue <- function(wt_idx){
 
   for (cur_chr in cur_tiss_chrom_region_df %>% pull(chrom) %>% unique() %>% sort()){
     cur_diag_graph <- readRDS(glue("output/cache/ctwas_diag_{WANT_STUDIES[1]}__{want_tissues[wt_idx]}__eqtl_chr{cur_chr}.rds"))
-    # print(glue("Chromosome {cur_chr}. {want_tissues[wt_idx]}"))
-    cat("\n")
-    cat(glue("### Chromosome {cur_chr}"))
-    cat("\n")
+    print(glue("Chromosome {cur_chr}. {want_tissues[wt_idx]}"))
+    # cat("\n")
+    # cat(glue("### Chromosome {cur_chr}"))
+    # cat("\n")
     print(cur_diag_graph)
   
     cur_tiss_chrom_mismatch_tracker <- cur_tiss_mismatch_tracker %>%
