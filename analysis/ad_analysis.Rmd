@@ -64,3 +64,20 @@ for (i in 1:2){ # debug
 `r knitr::knit(text=paste(out, collapse="\n\n"))`
 
 
+# By Tissue Figures and Tables (Wightmen SQTL)
+
+```{r sqtl_iterate_tissues, message=F, warning=F, include=F}
+study <- "AD_Wightmen_NG_2021"
+eqtl_or_sqtl <- "sqtl"
+cur_dat <- readRDS("output/cache/AD_Wightmen_NG_2021__sqtl.rds")
+attach(cur_dat)
+# https://stackoverflow.com/questions/21729415/generate-dynamic-r-markdown-blocks
+out = NULL
+for (i in 1:2){ # debug
+# for (i in 1:length(want_tissues)){
+  out <- c(out, knitr::knit_expand("analysis/chunks/tissue_chunk.Rmd"))
+}
+# `r knitr::knit(text=out)`
+```
+
+`r knitr::knit(text=paste(out, collapse="\n\n"))`
