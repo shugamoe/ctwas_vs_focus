@@ -1,0 +1,66 @@
+---
+title: "cTWAS vs FOCUS"
+author: "Julian McClellan"
+date: "2023-08-31"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, message=F, include=F}
+library(tidyverse)
+library(glue)
+library(cowplot)
+library(purrr)
+knitr::opts_chunk$set(echo = FALSE)
+# https://stackoverflow.com/questions/30237310/setting-work-directory-in-knitr-using-opts-chunksetroot-dir-doesnt-wor
+# knitr::opts_knit$set(root.dir = file.path(rprojroot::find_rstudio_root_file()))
+# knitr::opts_chunk$set(root.dir = file.path(rprojroot::find_rstudio_root_file()))
+options(dplyr.summarise.inform = FALSE)
+
+# https://github.com/rstudio/DT/issues/67
+# You need this code to conduct the magic dependences attaching...
+DT::datatable(matrix())
+
+source("code/prep_data.R")
+source("code/locus_plot.R")
+source("code/display_ctwas.R")
+```
+
+# By Tissue Figures and Tables (Bellenguez EQTL)
+
+```{r iterate_tissues, message=F, warning=F, include=F}
+study <- "AD_Bellenguez_GWAS_NG_2022"
+eqtl_or_sqtl <- "eqtl"
+cur_dat <- readRDS("output/cache/AD_Bellenguez_GWAS_NG_2022__eqtl.rds")
+attach(cur_dat)
+# https://stackoverflow.com/questions/21729415/generate-dynamic-r-markdown-blocks
+out = NULL
+# for (i in 1:length(want_tissues)){
+for (i in 1:2){ # debug
+  out <- c(out, knitr::knit_expand("analysis/chunks/tissue_chunk.Rmd"))
+}
+# `r knitr::knit(text=out)`
+```
+
+`r knitr::knit(text=paste(out, collapse="\n\n"))`
+
+# By Tissue Figures and Tables (Bellenguez SQTL)
+
+```{r sqtl_iterate_tissues, message=F, warning=F, include=F}
+study <- "AD_Bellenguez_GWAS_NG_2022"
+eqtl_or_sqtl <- "sqtl"
+cur_dat <- readRDS("output/cache/AD_Bellenguez_GWAS_NG_2022__sqtl.rds")
+attach(cur_dat)
+# https://stackoverflow.com/questions/21729415/generate-dynamic-r-markdown-blocks
+out = NULL
+for (i in 1:2){ # debug
+# for (i in 1:length(want_tissues)){
+  out <- c(out, knitr::knit_expand("analysis/chunks/tissue_chunk.Rmd"))
+}
+# `r knitr::knit(text=out)`
+```
+
+`r knitr::knit(text=paste(out, collapse="\n\n"))`
+
+
