@@ -7,16 +7,20 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
                        legend_side="right", legend_panel="cTWAS",
                        twas_ymax=NULL,draw_gene_track = draw_gene_track,
                        
-                       results_dir="data/ctwas_rss/",
-                       zscore_dir="data/impute_expr_z/",
                        calced_ld_dir="/scratch/jmcclellan/scratch_pdb_filt_ctwas_gtex_v8_eur_ld/",
                        by_chrom_fix=T # Think my hacky way of doing by chromosome ctwas requires a fix somewhere, regionlist seems to have numbers as characters at second list layer
                        ){
     require(glue)
     require(tidyverse)
-    study_prefix <- switch(study_name, "meta_analysis_BCAC_UKB_ovr_brca" = "meta_bcac_ukb_ovr")
+    study_prefix <- switch(study_name, "meta_analysis_BCAC_UKB_ovr_brca" = "meta_bcac_ukb_ovr",
+                                     "AD_Bellenguez_GWAS_NG_2022" = "bellen",
+                                     "AD_Wightmen_NG_2021" = "wight")
+    trait <- switch(study_name, "meta_analysis_BCAC_UKB_ovr_brca" = "brca",
+                                     "AD_Bellenguez_GWAS_NG_2022" = "ad",
+                                     "AD_Wightmen_NG_2021" = "ad")
+    results_dir <- glue("data/trait_{trait}/ctwas_rss/")
+    zscore_dir <- glue("data/trait_{trait}/impute_expr_z/")
     region_tag1 <- chrom
-
     
     a <- ctwas_res
     ctwas_gene_res <- a %>%
@@ -140,7 +144,6 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     
     a$PVALUE <- (-log(2) - pnorm(abs(a$z), lower.tail=F, log.p=T))/log(10)
   
-    # results_dir="data/ctwas_rss/"
     R_gene <- readRDS(file.path(results_dir, glue("{study_prefix}__{tissue}__{eqtl_or_sqtl}_chr{chrom}_LDR"), basename(region$R_g_file)))
     R_snp_gene <- readRDS(file.path(results_dir, glue("{study_prefix}__{tissue}__{eqtl_or_sqtl}_chr{chrom}_LDR"), basename(region$R_sg_file)))
     R_snp <- as.matrix(Matrix::bdiag(lapply(region$regRDS,
@@ -158,6 +161,12 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     # a$r2max[a$type=="SNP"] <- R_snp_gene[a$id[a$type=="SNP"],focus]
     replace_gene <- R_gene[focus,a$id[a$type=="gene"]]
     replace_snp <- R_snp_gene[a$id[a$type=="SNP"],focus]
+    if (!is.null(dim(replace_gene))){
+      replace_gene <- replace_gene[1,]
+    }
+    if (!is.null(dim(replace_snp))){
+      replace_snp <- replace_snp[,1]
+    }
 
     if (length(replace_gene) != length(a$r2max[a$type=="gene"])){
       browser()
@@ -216,12 +225,12 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     og_label_genes <- label_genes
     label_genes <- a %>%
       filter(id %in% og_label_genes) %>%
-      pull(id)
+      pull(id) %>% unique()
     
     if (label_panel=="TWAS" | label_panel=="both"){
-      # if (length(label_genes) == 0){
-      #   browser()
-      # }
+      if (length(label_genes) == 0){
+        browser()
+      }
       for (i in 1:length(label_genes)){
         if (isTRUE(use_gname)){
           text(a$pos[a$id==label_genes[i]], a$PVALUE[a$id==label_genes[i]], labels=a$genename[a$id==label_genes[i]], pos=label_pos[i], cex=0.7)
@@ -238,7 +247,7 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
     for (i in 1:length(plot_eqtl)){
       cgene <- a %>%
         filter(id == plot_eqtl[i]) %>%
-        pull(id)
+        pull(id) %>% unique()
       # cgene <- a$id[which(a$id==plot_eqtl[i])]
       
       if (isTRUE(by_chrom_fix)){
