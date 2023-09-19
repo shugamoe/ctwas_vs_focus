@@ -1,4 +1,4 @@
-# Modified from /project2/guiming/xsun/proteome_alzheimer/codes/locus_plot_fusion.R
+#  Modified from /project2/guiming/xsun/proteome_alzheimer/codes/locus_plot_fusion.R
 locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
                        eqtl_or_sqtl, gwide_tiss_sig_thresh,
                        xlim=NULL, return_table=F, focus=NULL,
@@ -133,12 +133,14 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
       pull(id)
     # a$focus <- 0
     # a$focus <- as.numeric(a$id==focus)
-    a <- a %>%
-      mutate(focus = ifelse(id %in% focus, 1, 0))
-    if (length(focus) == 0){
-      browser()
+    if (eqtl_or_sqtl == "sqtl"){
+      a <- a %>%
+        mutate(focus = ifelse(id %in% label_genes, 1, 0))
+    } else {
+      a <- a %>%
+        mutate(focus = ifelse(id %in% focus, 1, 0))
     }
-    if (length(plot_eqtl) == 0){
+    if (length(focus) == 0){
       browser()
     }
     
@@ -242,41 +244,43 @@ locus_plot <- function(study_name, tissue, ctwas_res, chrom=22, region_tag2=5,
 
     par(mar = c(0.25, 4.1, 0.25, 2.1))
     
-    plot(NA, xlim = c(start, end), ylim = c(0, length(plot_eqtl)), frame.plot = F, axes = F, xlab = NA, ylab = NA)
+    if (length(plot_eqtl) > 0){
+      plot(NA, xlim = c(start, end), ylim = c(0, length(plot_eqtl)), frame.plot = F, axes = F, xlab = NA, ylab = NA)
     
-    for (i in 1:length(plot_eqtl)){
-      cgene <- a %>%
-        filter(id == plot_eqtl[i]) %>%
-        pull(id) %>% unique()
-      # cgene <- a$id[which(a$id==plot_eqtl[i])]
-      
-      if (isTRUE(by_chrom_fix)){
-        load(file.path(zscore_dir, glue("{study_prefix}__{tissue}__{eqtl_or_sqtl}_chr{chrom}_chr{chrom}.exprqc.Rd"))) 
-      } else {
-        load(file.path(zscore_dir, glue("{study_prefix}__{tissue}__{eqtl_or_sqtl}_chr{chrom}.exprqc.Rd"))) 
-      }
-      # load(paste0(results_dir, "/",analysis_id, "_expr_chr", region_tag1, ".exprqc.Rd"))
-      eqtls <- rownames(wgtlist[[cgene]])
-      eqtl_pos <- a$pos[a$id %in% eqtls]
-      
-      col="grey"
-      
-      rect(start, length(plot_eqtl)+1-i-0.8, end, length(plot_eqtl)+1-i-0.2, col = col, border = T, lwd = 1)
-      
-      if (length(eqtl_pos)>0){
-        for (j in 1:length(eqtl_pos)){
-          segments(x0=eqtl_pos[j], x1=eqtl_pos[j], y0=length(plot_eqtl)+1-i-0.2, length(plot_eqtl)+1-i-0.8, lwd=1.5)  
+      for (i in 1:length(plot_eqtl)){
+        cgene <- a %>%
+          filter(id == plot_eqtl[i]) %>%
+          pull(id) %>% unique()
+        # cgene <- a$id[which(a$id==plot_eqtl[i])]
+        
+        if (isTRUE(by_chrom_fix)){
+          load(file.path(zscore_dir, glue("{study_prefix}__{tissue}__{eqtl_or_sqtl}_chr{chrom}_chr{chrom}.exprqc.Rd"))) 
+        } else {
+          load(file.path(zscore_dir, glue("{study_prefix}__{tissue}__{eqtl_or_sqtl}_chr{chrom}.exprqc.Rd"))) 
+        }
+        # load(paste0(results_dir, "/",analysis_id, "_expr_chr", region_tag1, ".exprqc.Rd"))
+        eqtls <- rownames(wgtlist[[cgene]])
+        eqtl_pos <- a$pos[a$id %in% eqtls]
+        
+        col="grey"
+        
+        rect(start, length(plot_eqtl)+1-i-0.8, end, length(plot_eqtl)+1-i-0.2, col = col, border = T, lwd = 1)
+        
+        if (length(eqtl_pos)>0){
+          for (j in 1:length(eqtl_pos)){
+            segments(x0=eqtl_pos[j], x1=eqtl_pos[j], y0=length(plot_eqtl)+1-i-0.2, length(plot_eqtl)+1-i-0.8, lwd=1.5)  
+          }
         }
       }
+      if (isTRUE(use_gname)){
+        text(start, length(plot_eqtl)-(1:length(plot_eqtl))+0.5,  
+             labels = plot_eqtl_gname, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
+      } else {
+        text(start, length(plot_eqtl)-(1:length(plot_eqtl))+0.5,  
+             labels = plot_eqtl, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
+      }
     }
     
-    if (isTRUE(use_gname)){
-      text(start, length(plot_eqtl)-(1:length(plot_eqtl))+0.5,  
-           labels = plot_eqtl_gname, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
-    } else {
-      text(start, length(plot_eqtl)-(1:length(plot_eqtl))+0.5,  
-           labels = plot_eqtl, srt = 0, pos = 2, xpd = TRUE, cex=0.7)
-    }
     
   
     par(mar = c(4.1, 4.1, 0, 2.1))
