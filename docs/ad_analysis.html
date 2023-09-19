@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Julian McClellan" />
+
+<meta name="date" content="2023-08-31" />
+
+<title>cTWAS vs FOCUS</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.28/datatables.js"></script>
+<link href="site_libs/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.13.4/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ctwas_vs_focus</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">cTWAS vs FOCUS</h1>
+<h4 class="author">Julian McClellan</h4>
+<h4 class="date">2023-08-31</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2023-09-19
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>ctwas_vs_focus/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20230828code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20230828)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20230828code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20230828)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustree2ec23f20d30ca9e76f984ebf603fdc4215a9a78atargetblank2ec23f2a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/2ec23f20d30ca9e76f984ebf603fdc4215a9a78a" target="_blank">2ec23f2</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoectwasvsfocustree2ec23f20d30ca9e76f984ebf603fdc4215a9a78atargetblank2ec23f2a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/shugamoe/ctwas_vs_focus/tree/2ec23f20d30ca9e76f984ebf603fdc4215a9a78a" target="_blank">2ec23f2</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Untracked files:
+    Untracked:  Rplots.pdf
+    Untracked:  analysis/chunks/tissue_sqtl_chunk.Rmd
+    Untracked:  code/.display_ctwas.R.swp
+    Untracked:  code/display_ctwas.R
+    Untracked:  data/combine_phenotype_groups.txt.gz
+    Untracked:  data/trait_ad/
+    Untracked:  data/trait_brca/
+    Untracked:  figure/
+    Untracked:  logs/
+    Untracked:  output/cache/
+    Untracked:  wflow_build.R
+    Untracked:  wflow_build.sbatch
+
+Unstaged changes:
+    Modified:   analysis/chunks/tissue_chunk.Rmd
+    Modified:   analysis/test_analysis.Rmd
+    Modified:   code/locus_plot.R
+    Modified:   code/prep_data.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/ad_analysis.Rmd</code>) and HTML
+(<code>docs/ad_analysis.html</code>) files. If you’ve configured a
+remote Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/ctwas_vs_focus/blob/2ec23f20d30ca9e76f984ebf603fdc4215a9a78a/analysis/ad_analysis.Rmd" target="_blank">2ec23f2</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2023-09-19
+</td>
+<td>
+AD eqtl/sqtl POC
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="by-tissue-figures-and-tables-bellenguez-eqtl"
+class="section level1">
+<h1>By Tissue Figures and Tables (Bellenguez EQTL)</h1>
+<div id="brain_amygdala" class="section level2">
+<h2>Brain_Amygdala</h2>
+<p>Genome wide Bonferroni threshold for Brain_Amygdala:
+3.9175742^{-6}.</p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d1545d51e2d900ed4698" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-d1545d51e2d900ed4698">{"x":{"filter":"none","vertical":false,"caption":"<caption>Brain_Amygdala: FOCUS PIP &lt; 0.5 &amp; cTWAS PIP &gt; 0.9<\/caption>","data":[["1","2","3","4","5"],["ENSG00000189298.13","ENSG00000164938.13","ENSG00000174226.8","ENSG00000225190.10","ENSG00000159314.11"],["ZKSCAN3","TP53INP1","SNX31","PLEKHM1","ARHGAP27"],[6,8,8,17,17],[false,false,true,true,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>chrom<\/th>\n      <th>twas_sig<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="chromosome-6" class="section level3">
+<h3>Chromosome 6</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-f74a7854c2043cb0a7f2" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-f74a7854c2043cb0a7f2">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr6 | ~ 28050575-28949314<\/caption>","data":[["1"],["ENSG00000189298.13"],["ZKSCAN3"],[false],[3.917574238031811e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chromosome-8" class="section level3">
+<h3>Chromosome 8</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-829006ae4bb435dac858" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-829006ae4bb435dac858">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr8 | ~ 93993372-95522312<\/caption>","data":[["1"],["ENSG00000164938.13"],["TP53INP1"],[false],[3.917574238031811e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-4.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-0cc2a664588892403e48" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-0cc2a664588892403e48">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr8 | ~ 100608730-103110726<\/caption>","data":[["1"],["ENSG00000174226.8"],["SNX31"],[true],[3.917574238031811e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chromosome-17" class="section level3">
+<h3>Chromosome 17</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-6.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-4c9abaa2f09d3000a5ea" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-4c9abaa2f09d3000a5ea">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr17 | ~ 44979537-47798140<\/caption>","data":[["1"],["ENSG00000225190.10"],["PLEKHM1"],[true],[3.917574238031811e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="brain_anterior_cingulate_cortex_ba24" class="section level2">
+<h2>Brain_Anterior_cingulate_cortex_BA24</h2>
+<p>Genome wide Bonferroni threshold for
+Brain_Anterior_cingulate_cortex_BA24: 3.7086486^{-6}.</p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-f0cedae97e189d2816e8" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-f0cedae97e189d2816e8">{"x":{"filter":"none","vertical":false,"caption":"<caption>Brain_Anterior_cingulate_cortex_BA24: FOCUS PIP &lt; 0.5 &amp; cTWAS PIP &gt; 0.9<\/caption>","data":[["1","2","3","4","5"],["ENSG00000189298.13","ENSG00000164938.13","ENSG00000174226.8","ENSG00000225190.10","ENSG00000159314.11"],["ZKSCAN3","TP53INP1","SNX31","PLEKHM1","ARHGAP27"],[6,8,8,17,17],[false,true,true,true,false]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>chrom<\/th>\n      <th>twas_sig<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="chromosome-6-1" class="section level3">
+<h3>Chromosome 6</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-11c11358037189ab0f21" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-11c11358037189ab0f21">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr6 | ~ 28050575-28949314<\/caption>","data":[["1"],["ENSG00000189298.13"],["ZKSCAN3"],[false],[3.708648568461653e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chromosome-8-1" class="section level3">
+<h3>Chromosome 8</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5c03d9e681b6fd50dac5" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5c03d9e681b6fd50dac5">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr8 | ~ 93993372-95522312<\/caption>","data":[["1"],["ENSG00000164938.13"],["TP53INP1"],[true],[3.708648568461653e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-4.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-f2e4d8dbd14b221fadf5" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-f2e4d8dbd14b221fadf5">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr8 | ~ 98389754-103110726<\/caption>","data":[["1"],["ENSG00000174226.8"],["SNX31"],[true],[3.708648568461653e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chromosome-17-1" class="section level3">
+<h3>Chromosome 17</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-6.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5c7d3ac39e2b60da3fd2" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5c7d3ac39e2b60da3fd2">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr17 | ~ 44979537-47798140<\/caption>","data":[["1","2"],["ENSG00000225190.10","ENSG00000159314.11"],["PLEKHM1","ARHGAP27"],[true,false],[3.708648568461653e-06,3.708648568461653e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="by-tissue-figures-and-tables-bellenguez-sqtl"
+class="section level1">
+<h1>By Tissue Figures and Tables (Bellenguez SQTL)</h1>
+<div id="brain_amygdala-1" class="section level2">
+<h2>Brain_Amygdala</h2>
+<p>Genome wide Bonferroni threshold for Brain_Amygdala:
+2.1078369^{-6}.</p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-c145210c7ccd50776a78" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-c145210c7ccd50776a78">{"x":{"filter":"none","vertical":false,"caption":"<caption>Brain_Amygdala: FOCUS PIP &lt; 0.5 &amp; cTWAS PIP &gt; 0.9<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"],["ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000149932.16"],["ZSCAN26","ZSCAN26","ZSCAN26","ZSCAN26","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","TMEM219"],[6,6,6,6,8,8,8,8,8,8,8,8,8,8,8,16],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>chrom<\/th>\n      <th>twas_sig<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="chromosome-6-2" class="section level3">
+<h3>Chromosome 6</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-782ab80136ac6bc3d936" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-782ab80136ac6bc3d936">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr6 | ~ 28050575-28949314<\/caption>","data":[["1","2","3","4"],["ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11"],["ZSCAN26","ZSCAN26","ZSCAN26","ZSCAN26"],[null,null,null,null],[2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chromosome-8-2" class="section level3">
+<h3>Chromosome 8</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-7b162ad5790eaf1f9c6e" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-7b162ad5790eaf1f9c6e">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr8 | ~ 93993372-95522312<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11"],["ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12"],["NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6"],[null,null,null,null,null,null,null,null,null,null,null],[2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06,2.107836937734497e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chromosome-16" class="section level3">
+<h3>Chromosome 16</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-5.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-b8222cc44f2b827da19b" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b8222cc44f2b827da19b">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr16 | ~ 29025292-31371149<\/caption>","data":[["1"],["ENSG00000149932.16"],["TMEM219"],[null],[2.107836937734497e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Amygdala-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="brain_anterior_cingulate_cortex_ba24-1" class="section level2">
+<h2>Brain_Anterior_cingulate_cortex_BA24</h2>
+<p>Genome wide Bonferroni threshold for
+Brain_Anterior_cingulate_cortex_BA24: 1.763544^{-6}.</p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-9cec095de5e843dbc609" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-9cec095de5e843dbc609">{"x":{"filter":"none","vertical":false,"caption":"<caption>Brain_Anterior_cingulate_cortex_BA24: FOCUS PIP &lt; 0.5 &amp; cTWAS PIP &gt; 0.9<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],["ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000149932.16","ENSG00000149932.16","ENSG00000149932.16"],["ZSCAN26","ZSCAN26","ZSCAN26","ZSCAN26","ZSCAN26","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","TMEM219","TMEM219","TMEM219"],[6,6,6,6,6,8,8,8,8,8,8,8,8,8,16,16,16],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>chrom<\/th>\n      <th>twas_sig<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="chromosome-6-3" class="section level3">
+<h3>Chromosome 6</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-bf100eaccb0cf6061ac2" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-bf100eaccb0cf6061ac2">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr6 | ~ 28050575-28949314<\/caption>","data":[["1","2","3","4","5"],["ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11","ENSG00000197062.11"],["ZSCAN26","ZSCAN26","ZSCAN26","ZSCAN26","ZSCAN26"],[null,null,null,null,null],[1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chromosome-8-3" class="section level3">
+<h3>Chromosome 8</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-25cbe121dc7cb74c9fc6" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-25cbe121dc7cb74c9fc6">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr8 | ~ 93993372-95522312<\/caption>","data":[["1","2","3","4","5","6","7","8","9"],["ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12","ENSG00000156170.12"],["NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6","NDUFAF6"],[null,null,null,null,null,null,null,null,null],[1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chromosome-16-1" class="section level3">
+<h3>Chromosome 16</h3>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-5.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-86160c5e5eca00cf992d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-86160c5e5eca00cf992d">{"x":{"filter":"none","vertical":false,"caption":"<caption>Chr16 | ~ 29025292-31371149<\/caption>","data":[["1","2","3"],["ENSG00000149932.16","ENSG00000149932.16","ENSG00000149932.16"],["TMEM219","TMEM219","TMEM219"],[null,null,null],[1.763544018058691e-06,1.763544018058691e-06,1.763544018058691e-06]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>gene_id.v26<\/th>\n      <th>gene_name.v40<\/th>\n      <th>twas_sig<\/th>\n      <th>tiss_bfr_thresh<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><img src="figure/ad_analysis.Rmd/Brain_Anterior_cingulate_cortex_BA24-6.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre><code>R version 4.2.3 (2023-03-15)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: Red Hat Enterprise Linux 8.3 (Ootpa)
+
+Matrix products: default
+BLAS/LAPACK: /gpfs/data/huo-lab/jmcclellan/software/envs/parsl/lib/libopenblasp-r0.3.21.so
+
+locale:
+[1] C
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.1.1   glue_1.6.2      forcats_1.0.0   stringr_1.5.0  
+ [5] dplyr_1.1.2     purrr_0.3.4     readr_2.1.4     tidyr_1.2.0    
+ [9] tibble_3.2.1    ggplot2_3.4.3   tidyverse_1.3.1 workflowr_1.7.1
+
+loaded via a namespace (and not attached):
+ [1] httr_1.4.7        sass_0.4.7        jsonlite_1.8.7    modelr_0.1.11    
+ [5] bslib_0.5.1       assertthat_0.2.1  getPass_0.2-2     highr_0.10       
+ [9] cellranger_1.1.0  yaml_2.3.7        pillar_1.9.0      backports_1.4.1  
+[13] lattice_0.21-8    digest_0.6.33     promises_1.2.0.1  rvest_1.0.3      
+[17] colorspace_2.1-0  htmltools_0.5.6   httpuv_1.6.9      Matrix_1.5-4     
+[21] pkgconfig_2.0.3   broom_1.0.5       haven_2.5.3       scales_1.2.1     
+[25] processx_3.8.2    whisker_0.4.1     later_1.3.0       tzdb_0.4.0       
+[29] timechange_0.2.0  git2r_0.32.0      generics_0.1.3    farver_2.1.1     
+[33] ellipsis_0.3.2    DT_0.28           cachem_1.0.8      withr_2.5.0      
+[37] cli_3.6.1         magrittr_2.0.3    crayon_1.5.2      readxl_1.4.3     
+[41] evaluate_0.21     ps_1.7.5          fs_1.6.3          fansi_1.0.4      
+[45] xml2_1.3.3        tools_4.2.3       data.table_1.14.8 hms_1.1.3        
+[49] lifecycle_1.0.3   munsell_0.5.0     reprex_2.0.2      callr_3.7.3      
+[53] compiler_4.2.3    jquerylib_0.1.4   rlang_1.1.1       grid_4.2.3       
+[57] rstudioapi_0.15.0 htmlwidgets_1.6.2 crosstalk_1.2.0   labeling_0.4.2   
+[61] rmarkdown_2.24    gtable_0.3.4      DBI_1.1.3         R6_2.5.1         
+[65] lubridate_1.9.2   knitr_1.43        fastmap_1.1.1     utf8_1.2.3       
+[69] rprojroot_2.0.3   stringi_1.7.12    Rcpp_1.0.11       vctrs_0.6.3      
+[73] dbplyr_2.1.1      tidyselect_1.2.0  xfun_0.40        </code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
