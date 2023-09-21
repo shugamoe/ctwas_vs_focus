@@ -408,7 +408,12 @@ ad_bell_eqtl_want <- c("ENSG00000189298",
 "ENSG00000164938",
 "ENSG00000174226",
 "ENSG00000159314",
-"ENSG00000225190")
+"ENSG00000225190", 
+"ENSG00000108091",
+"ENSG00000104853",
+"ENSG00000170684",
+"ENSG00000260262"
+)
 
 ad_bell_sqtl_want <- c("ENSG00000197062",
 "ENSG00000229391",
@@ -433,12 +438,13 @@ if (interactive()){
   # }
 
   # AD
-  # study <- "AD_Bellenguez_GWAS_NG_2022" 
-  # runonce::save_run({main(study,
-  #     tiss_list="data/trait_ad/tissue_lists/12_of_13_brain_tissues.txt",
-  #     trait="ad", want_genes=ad_bell_eqtl_want)}, glue("output/cache/{study}__eqtl.rds"))
+  study <- "AD_Bellenguez_GWAS_NG_2022" 
+  runonce::save_run({main(study,
+      tiss_list="data/trait_ad/tissue_lists/12_of_13_brain_tissues.txt",
+      trait="ad", want_genes=ad_bell_eqtl_want)}, glue("output/cache/{study}__eqtl.rds"))
   # make_diagnostic_graphs("bellen", tiss_list="data/trait_ad/tissue_lists/12_of_13_brain_tissues.txt",
   #                        trait="ad", sample_size=111326 + 677663)
+
   # study <- "AD_Bellenguez_GWAS_NG_2022" 
   # runonce::save_run({main(study,
   #     tiss_list="data/trait_ad/tissue_lists/12_of_13_brain_tissues.txt",
@@ -446,13 +452,13 @@ if (interactive()){
   #     trait="ad", want_genes=ad_bell_sqtl_want)}, glue("output/cache/{study}__sqtl.rds"))
   # make_diagnostic_graphs("bellen", eqtl_or_sqtl="sqtl", tiss_list="data/trait_ad/tissue_lists/12_of_13_brain_tissues.txt",
   #                        trait="ad", sample_size=111326 + 677663)
-
-  study <- "AD_Wightmen_NG_2021" 
-  runonce::save_run({main(study,
-      tiss_list="data/trait_ad/tissue_lists/12_of_13_brain_tissues.txt",
-      eqtl_or_sqtl="sqtl", 
-      trait="ad", want_genes=ad_wight_sqtl_want)}, glue("output/cache/{study}__sqtl.rds"))
-  make_diagnostic_graphs("wight", eqtl_or_sqtl="sqtl", tiss_list="data/trait_ad/tissue_lists/12_of_13_brain_tissues.txt",
-                         trait="ad", sample_size=90338 + 1036225)
+   
+  # study <- "AD_Wightmen_NG_2021" 
+  # runonce::save_run({main(study,
+  #     tiss_list="data/trait_ad/tissue_lists/12_of_13_brain_tissues.txt",
+  #     eqtl_or_sqtl="sqtl", 
+  #     trait="ad", want_genes=ad_wight_sqtl_want)}, glue("output/cache/{study}__sqtl.rds"))
+  # make_diagnostic_graphs("wight", eqtl_or_sqtl="sqtl", tiss_list="data/trait_ad/tissue_lists/12_of_13_brain_tissues.txt",
+  #                        trait="ad", sample_size=90338 + 1036225)
 } else {
 }
